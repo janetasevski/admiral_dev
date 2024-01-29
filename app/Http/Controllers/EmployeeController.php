@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 
 class EmployeeController extends Controller
 {
@@ -39,8 +38,9 @@ class EmployeeController extends Controller
         // Save the employee to the database
         $employee->save();
 
+        session()->flash('success', 'Employee added successfully.');
         // Redirect back to the home page with a success message
-        return back()->with('message', 'Employee added successfully.');
+        return redirect('/employees');
     }
 
     // Method to display the employee edit form
@@ -61,14 +61,15 @@ class EmployeeController extends Controller
         ]);
 
         $employee->update($validatedData);
-
-         return redirect('/')->with('message', 'Employee details updated successfully.');
+        session()->flash('success', 'Employee details updated successfully.');
+         return redirect('/employees');
     }
 
     // Method to delete the employee
     public function destroy(Employee $employee)
     {
         $employee->delete();
-        return redirect('/')->with('message', 'Employee deleted successfully.');
+         session()->flash('error', 'Employee deleted successfully');
+        return redirect('/employees');
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -20,9 +20,9 @@ class UserController extends Controller
     {
         // Validate the form data
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|',
+            'email' => 'required||email|unique:users',
+            'password' => 'required||min:8|confirmed',
         ]);
 
         // Create a new user
@@ -35,12 +35,9 @@ class UserController extends Controller
         // Authenticate the user after registration
         Auth::login($user);
 
-        
         session()->flash('success', 'Registration successful. Welcome!');
         // Redirect to dashboard with success message
         return redirect('/')->with('success', 'Registration successful. Welcome!');
-
-        
     }
 
     // Method to show login form
@@ -68,14 +65,84 @@ class UserController extends Controller
             return back()->withInput()->withErrors(['email' => 'Invalid email or password.']);
         }
     }
+
     public function logout(Request $request)
     {
         Auth::logout(); // Logout the currently authenticated user
         $request->session()->invalidate(); // Invalidate the session
         $request->session()->regenerateToken(); // Regenerate the CSRF token
-
+        session()->flash('error', 'You have been logged out!');
         return redirect('/'); // Redirect to the login page after logout
     }
 
+    public function index()
+    {
+        $users = User::all();
+        return view('user.index', compact('users'));
+    }
 
+    public function create()
+    {
+        return view('user.create');
+    }
+
+    // Method to store a newly created user
+    public function store(Request $request)
+    {
+       
+            // Validate the incoming request data
+            $validatedData = $request->validate([
+            'name' => 'required||max:255',
+            'email' => 'required||email||unique:users',
+            'password' => 'required|min:8',
+        ]);
+
+            // Create a new user instance with the validated data
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+               'password' => bcrypt($validatedData['password']),
+                
+            ]);
+            // Save the user to the database
+            $user->save();
+
+            session()->flash('success', 'User added successfully.');
+            // Redirect back to the home page with a success message
+            return redirect('/users');
+       
+    }
+
+    // Method to show form for editing a user
+    public function edit(User $user)
+    {
+        return view('user.edit', compact('user'));
+    }
+
+    // Method to update a user
+    public function update(Request $request, User $user)
+    {
+        // Validate the form data
+        $validatedData = $request->validate([
+            'name' => 'required|',
+            'email' => 'required|email||unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8|confirmed',
+        ]);
+
+        // Update the user's name and email
+        $user->update([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+        ]);
+
+        // Check if a new password is provided and update the password if so
+        if ($validatedData['password']) {
+            $user->update([
+                'password' => bcrypt($validatedData['password']),
+            ]);
+        }
+
+        session()->flash('success', 'User updated successfully.');
+        return redirect()->route('users.index');
+    }
 }

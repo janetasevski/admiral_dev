@@ -5,7 +5,8 @@
 
     <div class="container mt-5">
         <div class="mb-3">
-            <a href="{{ route('employee.create') }}" class="btn btn-success"><i class="fas fa-plus"></i> Add Employee</a>
+            <a href="{{ route('employee.create') }}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Add
+                Employee</a>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
@@ -28,13 +29,13 @@
                             <td>{{ $employee->phone }}</td>
                             <td>{{ $employee->city }}</td>
                             <td>
-                                <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-primary btn-sm"><i
-                                        class="fas fa-edit "></i></a>
+                                <a href="{{ route('employee.edit', $employee->id) }}"
+                                    class="btn btn-outline-success btn-sm"><i class="fas fa-edit "></i></a>
                                 <form action="{{ route('employee.destroy', $employee->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"
                                         onclick="return confirm('Are you sure you want to delete this employee?')"><i
                                             class="fas fa-trash"> </i></button>
                                 </form>

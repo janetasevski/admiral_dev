@@ -2,22 +2,38 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Rules\CurrentPassword;
 
 class ProfileUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
-    public function rules(): array
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'name' => 'required|string',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                Rule::unique('users')->ignore(Auth::id()),
+            ],
+            'current_password' => [
+                'required',
+                new CurrentPassword
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ];
     }
 }

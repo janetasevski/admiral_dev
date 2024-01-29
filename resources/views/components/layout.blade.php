@@ -33,7 +33,7 @@
         </div>
     @endif
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         // Function to handle hiding alerts after a specified time and closing alerts
         function handleAlert(alertId, timeout) {
@@ -67,15 +67,22 @@
             @endif
         });
     </script>
-
-
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <button><i class="fas fa-home"></i></button>
+            @auth
+                <div>
+                    <a href="/" class="text-decoration-none me-3"><i class="fas fa-home"></i></a>
+                    {{-- @if (auth()->user()->isAdmin())
+                        <a href="{{ route('users.index') }}" class="text-decoration-none me-3"><i
+                                class="fa fa-users"></i></a>
+                    @endif --}}
+                </div>
+            @endauth
+
             <div>
                 <a class="navbar-brand" href="/">{{ $title ?? 'Employee Management' }}</a>
             </div>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -84,19 +91,20 @@
                 <ul class="navbar-nav ms-auto">
                     @auth <!-- Check if the user is authenticated -->
                         <li class="nav-item">
-                            <a class="nav-link" href="/">
+                            <a class="nav-link" href="{{ route('edit.profile') }}">
+
                                 <i class="fas fa-user"></i> Welcome, {{ auth()->user()->name }}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('edit.profile') }}">
-                                <i class="fas fa-edit"></i> Edit Profile
-                            </a>
+
+
+
                         </li>
                         <li class="nav-item">
                             <form class="inline" action="/logout" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-outline-danger">
                                     <i class="fas fa-sign-out-alt"></i> Logout
                                 </button>
                             </form>
