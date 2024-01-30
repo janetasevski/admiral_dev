@@ -1,4 +1,8 @@
-<x-layout title="Users">
+<x-layout>
+    <x-slot name="title">
+        Users
+    </x-slot>
+
     <div class="container mt-5">
         <div class="mb-3">
             <a href="{{ route('user.create') }}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Add User</a>
@@ -36,5 +40,10 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="mt-3 d-flex justify-content-center">
+            {{ $users->links('pagination::bootstrap-4') }}
+        </div>
+
     </div>
 </x-layout>

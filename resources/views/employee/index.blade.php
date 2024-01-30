@@ -45,6 +45,10 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-3 d-flex justify-content-center">
+            {{ $employees->links('pagination::bootstrap-4') }}
+        </div>
+
     </div>
 
 </x-layout>

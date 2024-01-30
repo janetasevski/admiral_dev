@@ -125,11 +125,12 @@
     <main class="container mt-5">
         {{ $slot }}
     </main>
+    </div>
 
-    <footer class="bg-dark text-white text-center py-3 fixed-bottom">
-        &copy; {{ date('Y') }} Employee Management
-    </footer>
 
 </body>
+<footer class="bg-dark text-white text-center py-3 fixed-bottom">
+    &copy; {{ date('Y') }} Employee Management
+</footer>
 
 </html>

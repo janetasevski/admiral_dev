@@ -6,7 +6,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="text-center">
-                    <h1>Edit User</h1>
+                    <h1>Edit Employee</h1>
                 </div>
             </div>
         </div>
@@ -48,4 +48,12 @@
             </div>
         </div>
     </div>
+    <script>
+        // Remove validation messages after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.text-danger').forEach(element => {
+                element.remove();
+            });
+        }, 5000);
+    </script>
 </x-layout>

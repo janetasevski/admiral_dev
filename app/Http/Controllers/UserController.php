@@ -77,7 +77,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(5);
         return view('user.index', compact('users'));
     }
 
@@ -124,8 +124,8 @@ class UserController extends Controller
     {
         // Validate the form data
         $validatedData = $request->validate([
-            'name' => 'required|',
-            'email' => 'required|email||unique:users,email,' . $user->id,
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
         ]);
 

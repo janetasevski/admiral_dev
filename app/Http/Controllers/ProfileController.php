@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -25,31 +25,42 @@ class ProfileController extends Controller
     
      // Update the user's profile information.
 
-
-public function update(ProfileUpdateRequest $request): RedirectResponse
+public function update(Request $request, User $user)
 {
-    // $request->validate();
     $user = $request->user();
-    
 
-    
-    // Validate the current password
-    // if (!Hash::check($request->current_password, $user->password)) {
-    //     return back()->withErrors(['current_password' => 'The current password is incorrect.'])->withInput();
-    // }
-    // Proceed with updating the user's profile
-    $user->fill($request->validated());
+    // Validate the form data
+    $validatedData = $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'current_password' => 'required',
+        'password' => 'nullable|min:8|confirmed',
+    ]);
 
-    if ($user->isDirty('email')) {
-        $user->email_verified_at = null;
+    // Check if the provided current password matches the user's actual current password
+    if (!Hash::check($validatedData['current_password'], $user->password)) {
+        return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect.']);
     }
 
-    $user->save();
+    // Update the user's name and email
+    $user->update([
+        'name' => $validatedData['name'],
+        'email' => $validatedData['email'],
+    ]);
 
+    // If a new password is provided, update the password
+    if ($validatedData['password']) {
+        $user->password = bcrypt($validatedData['password']);
+        $user->save();
+    }
+
+    // Flash a success message
     session()->flash('success', 'Profile updated successfully.');
 
-    return redirect()->route('edit.profile');
+    return redirect()->route('home');
 }
+
+
     /**
      * Delete the user's account.
      */
