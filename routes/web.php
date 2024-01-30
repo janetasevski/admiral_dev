@@ -8,17 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-// EMPLOYEE CONTROLLER
-
-// Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-// Route::get('/employees/create', [EmployeeController::class, 'create']);
-// Route::post('/employees', [EmployeeController::class, 'store']);
-// Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit']);
-// Route::put('/employees/{id}', [EmployeeController::class, 'update']);
-// Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
-
+//EMPLOYEE ROUTES
 Route::resource('employees', EmployeeController::class);
 
 Route::get('/dashboard', function () {

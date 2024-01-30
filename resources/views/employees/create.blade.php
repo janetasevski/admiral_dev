@@ -7,11 +7,11 @@
 @section('content')
     <h1>Create New Employee</h1>
 
-    @if(session('success'))
+    @if (session('success'))
         <div style="color: green;">{{ session('success') }}</div>
     @endif
 
-    <form method="post" action="{{ route('employees.store') }}">
+    <form method="post" action="{{ route('employees.store') }}" style="margin-top: 20px;">
         @csrf
         <label for="name">Name:</label>
         <input type="text" name="name" value="{{ old('name') }}" required>
@@ -28,6 +28,24 @@
         <label for="position">Position:</label>
         <input type="text" name="position" value="{{ old('position') }}" required>
         <br>
-        <button type="submit">Create Employee</button>
+        <button type="submit" style="background-color: #28a745; color: #fff; border: none; padding: 8px 16px; cursor: pointer;">Create Employee</button>
     </form>
+
+    <style>
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 @endsection

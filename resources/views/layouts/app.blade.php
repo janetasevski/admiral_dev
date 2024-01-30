@@ -1,5 +1,3 @@
-<!-- resources/views/layouts/app.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,11 +8,13 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
         }
 
         nav {
-            background-color: #f8f9fa;
+            background-color: #007bff;
             padding: 10px;
             margin-bottom: 20px;
         }
@@ -24,18 +24,33 @@
             text-decoration: none;
             color: #007bff;
         }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
     </style>
 </head>
 
 <body>
 
     <nav>
-        <a href="/">Home</a>
-        <a href="/employees">Employee List</a>
-        <a href="/employees/create">Create Employee</a>
+        <div class="container">
+            <a href="/">Home</a>
+            <a href="/employees">Employee List</a>
+            <a href="/employees/create">Create Employee</a>
+        </div>
     </nav>
 
-    <div>
+    <div class="container">
         @yield('content')
     </div>
 

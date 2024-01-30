@@ -27,8 +27,10 @@ class EmployeeController extends Controller
             'phone' => 'required',
             'position' => 'required'
         ]);
+
         $data = $request->except(['_token', '_method']);
-        Employee::create($request->all());
+        Employee::create($data);
+
         return redirect('/')->with('success', 'Employee created successfully');
     }
     public function edit($id)

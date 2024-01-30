@@ -11,7 +11,7 @@
         <div style="color: green;">{{ session('success') }}</div>
     @endif
 
-    <form method="post" action="{{ route('employees.update', $employee->id) }}">
+    <form method="post" action="{{ route('employees.update', $employee->id) }}" style="margin-top: 20px;">
         @csrf
         @method('PUT')
         <label for="name">Name:</label>
@@ -29,6 +29,26 @@
         <label for="position">Position:</label>
         <input type="text" name="position" value="{{ old('position', $employee->position) }}" required>
         <br>
-        <button type="submit">Update Employee</button>
+        <button type="submit"
+            style="background-color: #007bff; color: #fff; border: none; padding: 8px 16px; cursor: pointer;">Update
+            Employee</button>
     </form>
+
+    <style>
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 @endsection
