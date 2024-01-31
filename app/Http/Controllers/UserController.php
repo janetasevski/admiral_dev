@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserRepository;
 
 class UserController extends Controller
 {
+    protected $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     // Method to show registration form
     public function showRegistrationForm()
     {
@@ -20,20 +26,17 @@ class UserController extends Controller
     {
         // Validate the form data
         $validatedData = $request->validate([
-            'name' => 'required|',
-            'email' => 'required||email|unique:users',
-            'password' => 'required||min:8|confirmed',
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        // Create a new user
-        $user = User::create([
+        // Create a new user using the repository
+        $user = $this->userRepository->create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
         ]);
-
-        // Authenticate the user after registration
-        Auth::login($user);
 
         session()->flash('success', 'Registration successful. Welcome!');
         // Redirect to dashboard with success message
@@ -56,7 +59,7 @@ class UserController extends Controller
         ]);
 
         // Attempt to authenticate the user
-        if (Auth::attempt($credentials)) {
+        if (auth()->attempt($credentials)) {
             // Authentication successful, redirect to dashboard
             session()->flash('success', 'Login Successful. Welcome!');
             return redirect('/');
@@ -66,21 +69,24 @@ class UserController extends Controller
         }
     }
 
+    // Method to logout
     public function logout(Request $request)
     {
-        Auth::logout(); // Logout the currently authenticated user
+        auth()->logout(); // Logout the currently authenticated user
         $request->session()->invalidate(); // Invalidate the session
         $request->session()->regenerateToken(); // Regenerate the CSRF token
         session()->flash('error', 'You have been logged out!');
         return redirect('/'); // Redirect to the login page after logout
     }
 
+    // Method to display all users
     public function index()
     {
-        $users = User::paginate(5);
+        $users = $this->userRepository->all();
         return view('user.index', compact('users'));
     }
 
+    // Method to display the form for adding a new user
     public function create()
     {
         return view('user.create');
@@ -89,28 +95,23 @@ class UserController extends Controller
     // Method to store a newly created user
     public function store(Request $request)
     {
-       
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-            'name' => 'required||max:255',
-            'email' => 'required||email||unique:users',
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ]);
 
-            // Create a new user instance with the validated data
-            $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-               'password' => bcrypt($validatedData['password']),
-                
-            ]);
-            // Save the user to the database
-            $user->save();
+        // Create a new user using the repository
+        $user = $this->userRepository->create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
 
-            session()->flash('success', 'User added successfully.');
-            // Redirect back to the home page with a success message
-            return redirect('/users');
-       
+        session()->flash('success', 'User added successfully.');
+        // Redirect back to the home page with a success message
+        return redirect('/users');
     }
 
     // Method to show form for editing a user
@@ -124,25 +125,28 @@ class UserController extends Controller
     {
         // Validate the form data
         $validatedData = $request->validate([
-            'name' => 'required',
+            'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
         ]);
 
-        // Update the user's name and email
-        $user->update([
+        // Update the user using the repository
+        $this->userRepository->update($user, [
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
+            'password' => isset($validatedData['password']) ? bcrypt($validatedData['password']) : $user->password,
         ]);
-
-        // Check if a new password is provided and update the password if so
-        if ($validatedData['password']) {
-            $user->update([
-                'password' => bcrypt($validatedData['password']),
-            ]);
-        }
 
         session()->flash('success', 'User updated successfully.');
         return redirect()->route('users.index');
+    }
+
+    // Method to delete a user
+    public function destroy(User $user)
+    {
+        // Delete the user using the repository
+        $this->userRepository->delete($user);
+        session()->flash('error', 'User deleted successfully');
+        return redirect('/users');
     }
 }

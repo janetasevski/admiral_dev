@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
 {
+    protected $employeeRepository;
+
+    public function __construct(EmployeeRepository $employeeRepository)
+    {
+        $this->employeeRepository = $employeeRepository;
+    }
+
     // Method to display all employees
     public function index()
     {
-        $employees = Employee::paginate(5);
+        // Retrieve all employees using the repository
+        $employees = $this->employeeRepository->all();
         return view('employee.index', compact('employees'));
     }
 
@@ -32,11 +41,8 @@ class EmployeeController extends Controller
             'city' => 'required',
         ]);
 
-        // Create a new employee instance with the validated data
-        $employee = new Employee($validatedData);
-
-        // Save the employee to the database
-        $employee->save();
+        // Create a new employee using the repository
+        $this->employeeRepository->create($validatedData);
 
         session()->flash('success', 'Employee added successfully.');
         // Redirect back to the home page with a success message
@@ -52,6 +58,7 @@ class EmployeeController extends Controller
     // Method to update the employee data
     public function update(Request $request, Employee $employee)
     {
+        // Validate the incoming request data
         $validatedData = $request->validate([
             'name' => 'required',
             'surname' => 'required',
@@ -60,16 +67,19 @@ class EmployeeController extends Controller
             'city' => 'required',
         ]);
 
-        $employee->update($validatedData);
+        // Update the employee using the repository
+        $this->employeeRepository->update($employee, $validatedData);
+
         session()->flash('success', 'Employee details updated successfully.');
-         return redirect('/employees');
+        return redirect('/employees');
     }
 
     // Method to delete the employee
     public function destroy(Employee $employee)
     {
-        $employee->delete();
-         session()->flash('error', 'Employee deleted successfully');
+        // Delete the employee using the repository
+        $this->employeeRepository->delete($employee);
+        session()->flash('error', 'Employee deleted successfully');
         return redirect('/employees');
     }
 }
