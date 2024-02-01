@@ -28,13 +28,25 @@
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Change Password</label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password">
+                            <button type="button" class="btn btn-outline-secondary showPasswordBtn"
+                                data-target="password">
+                                Show
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="password_confirmation" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="password_confirmation"
-                            name="password_confirmation">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password_confirmation"
+                                name="password_confirmation">
+                            <button type="button" class="btn btn-outline-secondary showPasswordBtn"
+                                data-target="password_confirmation">
+                                Show
+                            </button>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-between">
@@ -65,5 +77,27 @@
                 element.remove();
             });
         }, 5000);
+
+        // Script to toggle password visibility
+        document.querySelectorAll('.showPasswordBtn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                // Get the target password input field ID
+                var targetId = this.getAttribute('data-target');
+                var targetInput = document.getElementById(targetId);
+
+                // Toggle visibility of the target password input
+                if (targetInput.type === "password") {
+                    targetInput.type = "text";
+                    // Add the Bootstrap class .active to indicate that the button has been clicked
+                    this.classList.add('active');
+                } else {
+                    targetInput.type = "password";
+                    // Remove the Bootstrap class .active when the button is clicked again
+                    this.classList.remove('active');
+                }
+            });
+        });
     </script>
 </x-layout>

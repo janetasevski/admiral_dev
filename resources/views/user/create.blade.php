@@ -35,7 +35,7 @@
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group">
                             <input type="password" class="form-control" id="password" name="password">
-                            <button class="btn btn-outline-secondary" id="showPasswordBtn">
+                            <button class="btn btn-outline-secondary showPasswordBtn" data-target="password">
                                 Show
                             </button>
                         </div>
@@ -54,13 +54,25 @@
 
     <script>
         // Script to toggle password visibility
-        document.getElementById('showPasswordBtn').addEventListener('click', function() {
-            var passwordInput = document.getElementById('password');
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-            } else {
-                passwordInput.type = "password";
-            }
+        document.querySelectorAll('.showPasswordBtn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                // Get the target password input field ID
+                var targetId = this.getAttribute('data-target');
+                var targetInput = document.getElementById(targetId);
+
+                // Toggle visibility of the target password input
+                if (targetInput.type === "password") {
+                    targetInput.type = "text";
+                    // Add the Bootstrap class .active to indicate that the button has been clicked
+                    this.classList.add('active');
+                } else {
+                    targetInput.type = "password";
+                    // Remove the Bootstrap class .active when the button is clicked again
+                    this.classList.remove('active');
+                }
+            });
         });
     </script>
 </x-layout>
