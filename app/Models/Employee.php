@@ -9,4 +9,12 @@ class Employee extends Model
 {
     protected $fillable = ['name', 'surname', 'email', 'phone', 'city'];
     use HasFactory;
+
+    /**
+     * Get the car associated with the employee.
+     */
+    public function car()
+    {
+          return $this->hasOne(Car::class);
+    }
 }

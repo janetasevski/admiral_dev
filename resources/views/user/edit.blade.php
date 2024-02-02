@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <x-slot name="title">
             Edit User
         </x-slot>

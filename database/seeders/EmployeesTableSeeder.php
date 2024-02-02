@@ -30,7 +30,7 @@ class EmployeesTableSeeder extends Seeder
                 'phone' => '987654321',
                 'city' => 'Los Angeles',
             ],
-            // Add more dummy data as needed
+            
         ];
 
         // Insert data into the employees table

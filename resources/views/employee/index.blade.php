@@ -3,7 +3,7 @@
         Employees
     </x-slot>
 
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="mb-3">
             <a href="{{ route('employee.create') }}" class="btn btn-outline-success"><i class="fas fa-plus"></i> Add
                 Employee</a>
@@ -17,6 +17,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
                         <th scope="col">City</th>
+                        <th scope="col">Car</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -28,6 +29,13 @@
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->phone }}</td>
                             <td>{{ $employee->city }}</td>
+                            <td>
+                                @if ($employee->car)
+                                    {{ $employee->car->brand }} {{ $employee->car->model }}
+                                @else
+                                    No Car Assigned
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('employee.edit', $employee->id) }}"
                                     class="btn btn-outline-success btn-sm"><i class="fas fa-edit "></i></a>

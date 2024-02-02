@@ -1,12 +1,12 @@
 <x-layout>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <x-slot name="title">
             Employee Management
         </x-slot>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="text-center">
-                    <h1>Edit Employee</h1>
+                    <h2>Edit Employee</h2>
                 </div>
             </div>
         </div>
@@ -40,10 +40,33 @@
                         <input type="text" class="form-control" id="city" name="city"
                             value="{{ $employee->city }}">
                     </div>
+                    <div class="mb-3">
+                        <label for="car_id" class="form-label">Assigned Car</label>
+                        <select class="form-select" name="car_id" id="car_id">
+                            <option value="">No Car Assigned</option>
+                            @foreach ($availableCars as $car)
+                                <option value="{{ $car->id }}"
+                                    {{ $employee->car && $employee->car->id == $car->id ? 'selected' : '' }}>
+                                    {{ $car->brand }} - {{ $car->model }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-outline-success">Update</button>
                         <a href="/" class="btn btn-outline-danger">Cancel</a>
                     </div>
+                    @if ($errors->any())
+                        <div class="mt-3">
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>

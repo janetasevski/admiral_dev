@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\CarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,4 +78,24 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+});
+
+//Cars Routes
+Route::middleware(['auth'])->group(function () {
+    // Route for displaying the list of cars (home page)
+    Route::get('/cars', [CarController::class, 'index'])->name('car.index');
+    // Route for displaying the form for creating a new car
+    Route::get('/car/create', [CarController::class, 'create'])->name('car.create');
+
+    // Route for storing the new car data  
+    Route::post('/car', [CarController::class, 'store'])->name('car.store');
+
+    // Route for displaying the car edit form
+    Route::get('/car/{car}/edit', [CarController::class, 'edit'])->name('car.edit');
+
+    // Route for updating the car data
+    Route::put('/car/{car}', [CarController::class, 'update'])->name('car.update');
+
+    // Route for deleting the car
+    Route::delete('/car/{car}', [CarController::class, 'destroy'])->name('car.destroy');
 });

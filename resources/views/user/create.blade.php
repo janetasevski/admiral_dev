@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
 
         <x-slot name="title">
             User Management
@@ -19,17 +19,11 @@
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" name="name"
                             value="{{ old('name') }}">
-                        @error('name')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email"
                             value="{{ old('email') }}">
-                        @error('email')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -39,14 +33,22 @@
                                 Show
                             </button>
                         </div>
-                        @error('password')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="submit" class="btn btn-outline-success">Create</button>
                         <a href="{{ route('users.index') }}" class="btn btn-outline-danger">Cancel</a>
                     </div>
+                    @if ($errors->any())
+                        <div class="mt-3">
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>
