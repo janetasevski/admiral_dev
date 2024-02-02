@@ -17,6 +17,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Position</th>
+                <th>Car</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                     <td>{{ $employee->email }}</td>
                     <td>{{ $employee->phone }}</td>
                     <td>{{ $employee->position }}</td>
+                    <td>{{ optional($employee->car)->model }}</td>
                     <td>
                         <a href="{{ route('employees.edit', $employee->id) }}">Edit</a>
                         <form method="post" action="{{ route('employees.destroy', $employee->id) }}" style="display: inline;">
@@ -47,7 +49,8 @@
             width: 100%;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;

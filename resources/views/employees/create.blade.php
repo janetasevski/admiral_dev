@@ -1,5 +1,3 @@
-<!-- resources/views/employees/create.blade.php -->
-
 @extends('layouts.app')
 
 @section('title', 'Create New Employee')
@@ -8,44 +6,75 @@
     <h1>Create New Employee</h1>
 
     @if (session('success'))
-        <div style="color: green;">{{ session('success') }}</div>
+        <div class="success">{{ session('success') }}</div>
     @endif
 
     <form method="post" action="{{ route('employees.store') }}" style="margin-top: 20px;">
         @csrf
         <label for="name">Name:</label>
         <input type="text" name="name" value="{{ old('name') }}" required>
-        <br>
         <label for="surname">Surname:</label>
         <input type="text" name="surname" value="{{ old('surname') }}" required>
-        <br>
         <label for="phone">Phone:</label>
         <input type="text" name="phone" value="{{ old('phone') }}" required>
-        <br>
         <label for="email">Email:</label>
         <input type="email" name="email" value="{{ old('email') }}" required>
-        <br>
         <label for="position">Position:</label>
         <input type="text" name="position" value="{{ old('position') }}" required>
-        <br>
-        <button type="submit" style="background-color: #28a745; color: #fff; border: none; padding: 8px 16px; cursor: pointer;">Create Employee</button>
+        <label for="car_id">Select Car:</label>
+        <select name="car_id">
+            <option value="" disabled selected>Select a car</option>
+            @foreach ($cars as $car)
+                <option value="{{ $car->id }}">{{ $car->model }} - {{ $car->year }} - {{ $car->color }}
+                </option>
+            @endforeach
+        </select>
+
+        <button type="submit">Create Employee</button>
     </form>
 
     <style>
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select option {
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        select option:hover {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
         button:hover {
             background-color: #218838;
+        }
+
+        div.success {
+            color: green;
+            margin-top: 10px;
         }
     </style>
 @endsection

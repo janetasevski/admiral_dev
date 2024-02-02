@@ -47,6 +47,7 @@
             <a href="/">Home</a>
             <a href="/employees">Employee List</a>
             <a href="/employees/create">Create Employee</a>
+            <a href="/cars/create">Create Cars</a>
         </div>
     </nav>
 

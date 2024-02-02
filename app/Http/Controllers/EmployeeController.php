@@ -2,21 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\CarRepository;
 use App\Http\Controllers\Controller;
+use App\Models\Car;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
 {
+    protected $employeeRepository;
+    protected $carsRepository;
+
+
+    public function __construct(EmployeeRepository $employeeRepository, CarRepository $carsRepository)
+    {
+        $this->employeeRepository = $employeeRepository;
+        $this->carsRepository = $carsRepository;
+    }
+
     public function index()
     {
-        $employees = Employee::all();
+        $employees = $this->employeeRepository->getAll();
         return view('employees.index', ['employees' => $employees]);
     }
 
     public function create()
     {
-        return view('employees.create');
+        $cars = $this->carsRepository->getAll();
+        return view('employees.create', compact('cars'));
     }
     public function store(Request $request)
     {
@@ -25,18 +39,31 @@ class EmployeeController extends Controller
             'surname' => 'required',
             'email' => 'email',
             'phone' => 'required',
-            'position' => 'required'
+            'position' => 'required',
+            'car_id' => 'required'
         ]);
 
         $data = $request->except(['_token', '_method']);
-        Employee::create($data);
 
-        return redirect('/')->with('success', 'Employee created successfully');
+        $carId = $data['car_id'];
+        $car = $this->carsRepository->getById($carId);
+
+        $this->employeeRepository->create([
+            'name' => $data['name'],
+            'surname' => $data['surname'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'position' => $data['position'],
+            'car_id' => $car->id,
+        ]);
+
+        return redirect('/employees')->with('success', 'Employee created successfully');
     }
     public function edit($id)
     {
-        $employee = Employee::find($id);
-        return view('employees.edit', ['employee' => $employee]);
+        $employee = $this->employeeRepository->getById($id);
+        $cars = $this->carsRepository->getAll();
+        return view('employees.edit', ['employee' => $employee, 'cars' => $cars]);
     }
 
     public function update(Request $request, $id)
@@ -51,16 +78,14 @@ class EmployeeController extends Controller
 
         // Remove '_token' and '_method' from the update data
         $data = $request->except(['_token', '_method']);
-
-        Employee::find($id)->update($data);
+        $this->employeeRepository->update($id, $data);
 
         return redirect('/employees')->with('success', 'Employee updated successfully.');
     }
 
     public function destroy($id)
     {
-        Employee::find($id)->delete();
-
+        $this->employeeRepository->delete($id);
         return redirect('/employees')->with('success', 'Employee deleted successfully.');
     }
 }
