@@ -101,14 +101,12 @@ public function update(Request $request, Employee $employee)
         'car_id' => [
             'nullable',
             'exists:cars,id',
-            function ($attribute,$value, $fail) {
-
+            function ($attribute, $value, $fail) use ($employee) {
                 //The $attribute parameter holds the name of the attribute being validated (in this case, 'car_id').
                 // Check if the car is already assigned to another employee
-
                 if ($value) {
                     $car = Car::find($value);
-                    if ($car && $car->employee_id !== null) {
+                    if ($car && $car->employee_id !== null && $car->employee_id !== $employee->id) {
                         $fail('The selected car is already assigned to another employee.');
                     }
                 }
@@ -119,12 +117,13 @@ public function update(Request $request, Employee $employee)
     // Update the employee's attributes
     $employee->update($validatedData);
 
-    
+    // Update car assignment if car_id is provided
     if ($request->filled('car_id')) {
         $car = Car::findOrFail($request->input('car_id'));
         $car->employee_id = $employee->id;
         $car->save();
     } else {
+        // If car_id is not provided, remove the employee's association with the car
         if ($employee->car) {
             $employee->car->employee_id = null;
             $employee->car->save();
@@ -134,6 +133,7 @@ public function update(Request $request, Employee $employee)
     session()->flash('success', 'Employee details updated successfully.');
     return redirect()->route('employee.index');
 }
+
 
 
 
