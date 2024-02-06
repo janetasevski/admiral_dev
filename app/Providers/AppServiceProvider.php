@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Employee;
+use App\Repositories\CarRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\EmployeeRepository;
+use App\Repositories\ProfileRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,9 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-       // Bind the EmployeeRepository interface to its implementation
-      $this->app->bind(EmployeeRepository::class, EmployeeRepository::class);
-       $this->app->bind(UserRepository::class, UserRepository::class);
+        $this->app->bind(CarRepository::class, CarRepository::class);
+        $this->app->bind(ProfileRepository::class, ProfileRepository::class);
+        $this->app->bind(EmployeeRepository::class, EmployeeRepository::class);
+        $this->app->bind(UserRepository::class, UserRepository::class);
 
     
 }
