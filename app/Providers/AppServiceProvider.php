@@ -14,8 +14,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(CarRepository::class, CarRepository::class);
-        $this->app->singleton(EmployeeRepository::class, EmployeeRepository::class);
+        $this->app->bind(CarRepository::class, function () {
+            return new CarRepository();
+        });
+
+        $this->app->bind(EmployeeRepository::class, function () {
+            return new EmployeeRepository();
+        });
     }
 
 
